@@ -172,11 +172,16 @@
 
 	</dependencies>
 	<!-- end 外部资源 -->
-
+	<repositories>
+		<repository>
+			<id>my-alternate-repository</id>
+			<url>https://mvnrepository.com</url>
+		</repository>
+	</repositories>
 	<!-- 项目基本配置 -->
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
-		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<!--<testSourceDirectory>src/test/java</testSourceDirectory>-->
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

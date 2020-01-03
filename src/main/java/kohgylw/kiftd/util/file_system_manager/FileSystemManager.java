@@ -91,13 +91,13 @@ public class FileSystemManager {
 			selectFoldersByParentFolderId = c.prepareStatement(
 					"SELECT * FROM FOLDER WHERE folder_parent = ? LIMIT 0," + MAX_FOLDERS_OR_FILES_LIMIT);
 			insertNode = c.prepareStatement("INSERT INTO FILE VALUES(?,?,?,?,?,?,?)");
-			insertFolder = c.prepareStatement("INSERT INTO FOLDER VALUES(?,?,?,?,?,?)");
+			insertFolder = c.prepareStatement("INSERT INTO FOLDER VALUES(?,?,?,?,?,?,?)");
 			deleteNodeById = c.prepareStatement("DELETE FROM FILE WHERE file_id = ?");
 			deleteFolderById = c.prepareStatement("DELETE FROM FOLDER WHERE folder_id = ?");
 			updateNodeById = c.prepareStatement(
-					"UPDATE FILE SET file_name = ? , file_size = ? , file_parent_folder = ? , file_creation_date = ? , file_creator = ? , file_path = ? WHERE file_id = ?");
+					"UPDATE FILE SET file_name = ? , file_size = ? , file_parent_folder = ? , file_creation_date = ? , folder_modify_date = ? , file_creator = ? , file_path = ? WHERE file_id = ?");
 			updateFolderById = c.prepareStatement(
-					"UPDATE FOLDER SET folder_name= ? , folder_creation_date = ? , folder_creator = ? , folder_parent = ? , folder_constraint = ? WHERE folder_id = ?");
+					"UPDATE FOLDER SET folder_name= ? , folder_creation_date = ? , folder_modify_date = ? , folder_creator = ? , folder_parent = ? , folder_constraint = ? WHERE folder_id = ?");
 			countNodesByFolderId = c.prepareStatement("SELECT count(file_id) FROM FILE WHERE file_parent_folder = ?");
 			countFoldersByParentFolderId = c
 					.prepareStatement("SELECT count(folder_id) FROM FOLDER WHERE folder_parent = ?");
@@ -407,6 +407,7 @@ public class FileSystemManager {
 		folder.setFolderName(r.getString("folder_name"));
 		folder.setFolderParent(r.getString("folder_parent"));
 		folder.setFolderCreationDate(r.getString("folder_creation_date"));
+		folder.setFolderModifyDate(r.getString("folder_modify_date"));
 		folder.setFolderCreator(r.getString("folder_creator"));
 		folder.setFolderConstraint(r.getInt("folder_constraint"));
 		return folder;
@@ -523,7 +524,8 @@ public class FileSystemManager {
 				} else {
 					folder.setFolderCreator(parent.getFolderCreator());
 				}
-				folder.setFolderCreationDate(ServerTimeUtil.accurateToDay());
+				folder.setFolderCreationDate(ServerTimeUtil.accurateToMinute());
+				folder.setFolderModifyDate(ServerTimeUtil.accurateToMinute());
 				int i = 0;
 				while (true) {
 					try {
@@ -540,7 +542,8 @@ public class FileSystemManager {
 					}
 				}
 			} else {
-				folder.setFolderCreationDate(ServerTimeUtil.accurateToDay());
+				folder.setFolderCreationDate(ServerTimeUtil.accurateToMinute());
+				folder.setFolderModifyDate(ServerTimeUtil.accurateToMinute());
 				if (updateFolder(folder) == 0) {
 					throw new SQLException();
 				}

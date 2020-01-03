@@ -202,7 +202,7 @@ public class FileServiceImpl extends RangeFileStreamWriter implements FileServic
 							try {
 								file.transferTo(file2);
 								f.setFileSize(fbu.getFileSize(file));
-								f.setFileCreationDate(ServerTimeUtil.accurateToDay());
+								f.setFileCreationDate(ServerTimeUtil.accurateToMinute());
 								if (account != null) {
 									f.setFileCreator(account);
 								} else {
@@ -251,7 +251,7 @@ public class FileServiceImpl extends RangeFileStreamWriter implements FileServic
 		} else {
 			f2.setFileCreator("\u533f\u540d\u7528\u6237");
 		}
-		f2.setFileCreationDate(ServerTimeUtil.accurateToDay());
+		f2.setFileCreationDate(ServerTimeUtil.accurateToMinute());
 		f2.setFileName(fileName);
 		f2.setFileParentFolder(folderId);
 		f2.setFilePath(path);
@@ -719,11 +719,13 @@ public class FileServiceImpl extends RangeFileStreamWriter implements FileServic
 						map3.put("folderId", folder.getFolderId());
 						map3.put("locationpath", locationpath);
 						if (this.flm.moveById(map3) > 0) {
-							Map<String, String> map2 = new HashMap<String, String>();
-							map2.put("folderId", folder.getFolderId());
-							map2.put("newName", FileNodeUtil.getNewFolderName(folder.getFolderName(),
+//							Map<String, String> map2 = new HashMap<String, String>();
+//							map2.put("folderId", folder.getFolderId());
+//							map2.put("newName", FileNodeUtil.getNewFolderName(folder.getFolderName(),
+//									flm.queryByParentId(locationpath)));
+							folder.setFolderName(FileNodeUtil.getNewFolderName(folder.getFolderName(),
 									flm.queryByParentId(locationpath)));
-							if (flm.updateFolderNameById(map2) <= 0) {
+							if (flm.updateFolderById(folder) <= 0) {
 								return "cannotMoveFiles";
 							}
 							this.lu.writeMoveFileEvent(request, folder);
@@ -1036,7 +1038,7 @@ public class FileServiceImpl extends RangeFileStreamWriter implements FileServic
 		} else {
 			f2.setFileCreator("\u533f\u540d\u7528\u6237");
 		}
-		f2.setFileCreationDate(ServerTimeUtil.accurateToDay());
+		f2.setFileCreationDate(ServerTimeUtil.accurateToMinute());
 		f2.setFileName(fileName);
 		f2.setFileParentFolder(folderId);
 		f2.setFilePath(path);
@@ -1108,7 +1110,7 @@ public class FileServiceImpl extends RangeFileStreamWriter implements FileServic
 	 * </p>
 	 * 
 	 * @author 青阳龙野(kohgylw)
-	 * @param java.lang.String
+	 * @param  path 路径
 	 *            需要解析的相对路径
 	 * @return java.lang.String 文件名
 	 */

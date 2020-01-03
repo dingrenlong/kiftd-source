@@ -5,6 +5,7 @@ public class Folder
     private String folderId;
     private String folderName;
     private String folderCreationDate;
+    private String folderModifyDate;
     private String folderCreator;
     private String folderParent;
     private int folderConstraint;
@@ -32,7 +33,15 @@ public class Folder
     public void setFolderCreationDate(final String folderCreationDate) {
         this.folderCreationDate = folderCreationDate;
     }
-    
+
+    public String getFolderModifyDate() {
+        return folderModifyDate;
+    }
+
+    public void setFolderModifyDate(String folderModifyDate) {
+        this.folderModifyDate = folderModifyDate;
+    }
+
     public String getFolderCreator() {
         return this.folderCreator;
     }

@@ -78,7 +78,8 @@ public class FolderServiceImpl implements FolderService {
 		}
 		f.setFolderId(UUID.randomUUID().toString());
 		f.setFolderName(folderName);
-		f.setFolderCreationDate(ServerTimeUtil.accurateToDay());
+		f.setFolderCreationDate(ServerTimeUtil.accurateToMinute());
+		f.setFolderModifyDate(ServerTimeUtil.accurateToMinute());
 		if (account != null) {
 			f.setFolderCreator(account);
 		} else {
@@ -154,6 +155,8 @@ public class FolderServiceImpl implements FolderService {
 			return "errorParameter";
 		}
 		final Folder folder = this.fm.queryById(folderId);
+//		folder.setFolderCreationDate(ServerTimeUtil.accurateToMinute());
+		folder.setFolderModifyDate(ServerTimeUtil.accurateToMinute());
 		if (folder == null) {
 			return "errorParameter";
 		}
@@ -175,23 +178,23 @@ public class FolderServiceImpl implements FolderService {
 				if (ifc < pc) {
 					return "errorParameter";
 				} else {
-					Map<String, Object> map = new HashMap<>();
-					map.put("newConstraint", ifc);
-					map.put("folderId", folderId);
-					fm.updateFolderConstraintById(map);
-					changeChildFolderConstraint(folderId, ifc);
+
+					// 修改文件夹名称
 					if (!folder.getFolderName().equals(newName)) {
 						if (fm.queryByParentId(parentFolder.getFolderId()).parallelStream()
 								.anyMatch((e) -> e.getFolderName().equals(newName))) {
 							return "nameOccupied";
 						}
-						Map<String, String> map2 = new HashMap<String, String>();
-						map2.put("folderId", folderId);
-						map2.put("newName", newName);
-						if (this.fm.updateFolderNameById(map2) == 0) {
-							return "errorParameter";
-						}
+						folder.setFolderName(newName);
 					}
+					// 修改文件夹约束
+					folder.setFolderConstraint(ifc);
+					if (this.fm.updateFolderById(folder) == 0) {
+						return "errorParameter";
+					}
+					// 修改子目录约束
+					changeChildFolderConstraint(folderId, ifc);
+
 					this.lu.writeRenameFolderEvent(request, folder, newName, folderConstraint);
 					return "renameFolderSuccess";
 				}
@@ -221,10 +224,12 @@ public class FolderServiceImpl implements FolderService {
 		List<Folder> cfs = fm.queryByParentId(folderId);
 		for (Folder cf : cfs) {
 			if (cf.getFolderConstraint() < c) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("newConstraint", c);
-				map.put("folderId", cf.getFolderId());
-				fm.updateFolderConstraintById(map);
+				cf.setFolderConstraint(c);
+				fm.updateFolderById(cf);
+//				Map<String, Object> map = new HashMap<String, Object>();
+//				map.put("newConstraint", c);
+//				map.put("folderId", cf.getFolderId());
+//				fm.updateFolderConstraintById(map);
 			}
 			changeChildFolderConstraint(cf.getFolderId(), c);
 		}
@@ -325,7 +330,8 @@ public class FolderServiceImpl implements FolderService {
 			return gson.toJson(cnfbnr);
 		}
 		f.setFolderId(UUID.randomUUID().toString());
-		f.setFolderCreationDate(ServerTimeUtil.accurateToDay());
+		f.setFolderCreationDate(ServerTimeUtil.accurateToMinute());
+		f.setFolderModifyDate(ServerTimeUtil.accurateToMinute());
 		if (account != null) {
 			f.setFolderCreator(account);
 		} else {

@@ -142,6 +142,7 @@ public class FolderViewServiceImpl implements FolderViewService {
 		sf.setFolderParent(vf.getFolderId());// 搜索视图的父级也与搜索路径一致
 		sf.setFolderCreator("--");// 搜索视图是虚拟的，没有这些
 		sf.setFolderCreationDate("--");
+		sf.setFolderModifyDate("--");
 		sf.setFolderConstraint(vf.getFolderConstraint());// 其访问等级也与搜索路径一致
 		sv.setFolder(sf);// 搜索视图的文件夹信息已经准备就绪
 		// 设置上级路径为搜索路径

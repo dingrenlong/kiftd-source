@@ -123,7 +123,8 @@ public class FolderUtil {
 		}
 		f.setFolderId(UUID.randomUUID().toString());
 		f.setFolderName(folderName);
-		f.setFolderCreationDate(ServerTimeUtil.accurateToDay());
+		f.setFolderCreationDate(ServerTimeUtil.accurateToMinute());
+		f.setFolderModifyDate(ServerTimeUtil.accurateToMinute());
 		if (account != null) {
 			f.setFolderCreator(account);
 		} else {

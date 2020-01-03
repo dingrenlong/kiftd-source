@@ -37,6 +37,7 @@ public class SettingWindow extends KiftdDynamicWindow {
 	private static JComboBox<String> logLevelinput;
 	private static JComboBox<String> changePwdinput;
 	private static JComboBox<String> showChaininput;
+	private static JButton advancedSetup;
 	private static JButton cancel;
 	private static JButton update;
 	private static JButton changeFileSystemPath;
@@ -55,6 +56,7 @@ public class SettingWindow extends KiftdDynamicWindow {
 	protected static GetServerStatus st;
 	protected static UpdateSetting us;
 	private static FileSystemPathViewer fspv;
+	private static AdvancedSetupViewer asv;
 
 	private SettingWindow() {
 		setUIFont();// 全局字体设置
@@ -72,7 +74,7 @@ public class SettingWindow extends KiftdDynamicWindow {
 		titlebox.add(title);
 		SettingWindow.window.add(titlebox);
 		// 窗口组件排布
-		final JPanel settingbox = new JPanel(new GridLayout(8, 1, 0, 0));
+		final JPanel settingbox = new JPanel(new GridLayout(10, 1, 0, 0));
 		settingbox.setBorder(new EtchedBorder());
 		final int interval = 0;
 		// 必须登入下拉框
@@ -148,6 +150,14 @@ public class SettingWindow extends KiftdDynamicWindow {
 		changeFileSystemPath.setPreferredSize(new Dimension((int) (170 * proportion), (int) (32 * proportion)));
 		filePathBox.add(filePathtitle);
 		filePathBox.add(SettingWindow.changeFileSystemPath);
+		// 高级设置按钮
+		final JPanel advancedSetupBox = new JPanel(new FlowLayout(1));
+		advancedSetupBox.setBorder(new EmptyBorder(interval, 0, interval, 0));
+		final JLabel advancedSetuptitle = new JLabel("高级设置(advancedSetup)：");
+		SettingWindow.advancedSetup = new JButton("高级(advancedSetup)");
+		advancedSetup.setPreferredSize(new Dimension((int) (170 * proportion), (int) (32 * proportion)));
+		advancedSetupBox.add(advancedSetuptitle);
+		advancedSetupBox.add(SettingWindow.advancedSetup);
 		// 界面布局顺序
 		settingbox.add(portbox);
 		settingbox.add(mlbox);
@@ -157,6 +167,7 @@ public class SettingWindow extends KiftdDynamicWindow {
 		settingbox.add(cpbox);
 		settingbox.add(scbox);
 		settingbox.add(filePathBox);
+		settingbox.add(advancedSetupBox);
 		SettingWindow.window.add(settingbox);
 		final JPanel buttonbox = new JPanel(new FlowLayout(1));
 		buttonbox.setBorder(new EmptyBorder((int) (0 * proportion), 0, (int) (5 * proportion), 0));
@@ -279,6 +290,14 @@ public class SettingWindow extends KiftdDynamicWindow {
 			public void actionPerformed(ActionEvent e) {
 				fspv = FileSystemPathViewer.getInstance();
 				fspv.show();
+			}
+		});
+		SettingWindow.advancedSetup.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				asv = AdvancedSetupViewer.getInstance();
+				asv.show();
 			}
 		});
 		modifyComponentSize(window);
